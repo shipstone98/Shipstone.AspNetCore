@@ -13,6 +13,7 @@ internal sealed class MockHttpResponse : HttpResponse
     internal Action<Stream> _bodyAction;
     internal Func<Stream> _bodyFunc;
     internal Func<bool> _hasStartedFunc;
+    internal Func<IHeaderDictionary> _headersFunc;
     internal Action<int> _statusCodeAction;
     internal Func<int> _statusCodeFunc;
 
@@ -41,9 +42,7 @@ internal sealed class MockHttpResponse : HttpResponse
         throw new NotImplementedException();
 
     public sealed override bool HasStarted => this._hasStartedFunc();
-
-    public sealed override IHeaderDictionary Headers =>
-        throw new NotImplementedException();
+    public sealed override IHeaderDictionary Headers => this._headersFunc();
 
     public sealed override HttpContext HttpContext =>
         throw new NotImplementedException();
@@ -59,6 +58,7 @@ internal sealed class MockHttpResponse : HttpResponse
         this._bodyAction = _ => throw new NotImplementedException();
         this._bodyFunc = () => throw new NotImplementedException();
         this._hasStartedFunc = () => throw new NotImplementedException();
+        this._headersFunc = () => throw new NotImplementedException();
         this._statusCodeAction = _ => throw new NotImplementedException();
         this._statusCodeFunc = () => throw new NotImplementedException();
     }

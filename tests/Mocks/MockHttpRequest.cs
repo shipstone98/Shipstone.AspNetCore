@@ -10,6 +10,7 @@ namespace Shipstone.AspNetCoreTest.Mocks;
 
 internal sealed class MockHttpRequest : HttpRequest
 {
+    internal Func<IHeaderDictionary> _headersFunc;
     internal Func<String> _methodFunc;
     internal Func<PathString> _pathFunc;
     internal Func<String> _protocolFunc;
@@ -52,8 +53,7 @@ internal sealed class MockHttpRequest : HttpRequest
     public sealed override bool HasFormContentType =>
         throw new NotImplementedException();
 
-    public sealed override IHeaderDictionary Headers =>
-        throw new NotImplementedException();
+    public sealed override IHeaderDictionary Headers => this._headersFunc();
 
     public sealed override HostString Host
     {
@@ -120,6 +120,7 @@ internal sealed class MockHttpRequest : HttpRequest
 
     internal MockHttpRequest()
     {
+        this._headersFunc = () => throw new NotImplementedException();
         this._methodFunc = () => throw new NotImplementedException();
         this._pathFunc = () => throw new NotImplementedException();
         this._protocolFunc = () => throw new NotImplementedException();
