@@ -8,7 +8,7 @@ internal readonly struct PinnedInt64
 
     internal PinnedInt64(long val) => this._value = val;
 
-    internal PinnedInt64 Add(long val)
+    internal readonly PinnedInt64 Add(long val)
     {
         try
         {
