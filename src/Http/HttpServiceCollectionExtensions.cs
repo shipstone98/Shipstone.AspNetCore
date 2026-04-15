@@ -3,6 +3,8 @@ using System.IO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
+using Shipstone.Utilities;
+
 namespace Shipstone.AspNetCore.Http;
 
 /// <summary>
@@ -26,6 +28,24 @@ public static class HttpServiceCollectionExtensions
 
         return services.AddSingleton(_ =>
             new ArgumentExceptionHandlingMiddleware(statusCode));
+    }
+
+    /// <summary>
+    /// Registers services required by <see cref="ConflictException" /> handling services.
+    /// </summary>
+    /// <param name="services">The <see cref="IServiceCollection" /> to register services with.</param>
+    /// <param name="statusCode">The HTTP status code to return.</param>
+    /// <returns>A reference to <c><paramref name="services" /></c> that can be further used to register services.</returns>
+    /// <exception cref="ArgumentNullException"><c><paramref name="services" /></c> is <c>null</c>.</exception>
+    public static IServiceCollection AddConflictExceptionHandling(
+        this IServiceCollection services,
+        int statusCode = StatusCodes.Status409Conflict
+    )
+    {
+        ArgumentNullException.ThrowIfNull(services);
+
+        return services.AddSingleton(_ =>
+            new ConflictExceptionHandlingMiddleware(statusCode));
     }
 
     /// <summary>

@@ -1,6 +1,8 @@
 using System;
 using Microsoft.AspNetCore.Builder;
 
+using Shipstone.Utilities;
+
 namespace Shipstone.AspNetCore.Http;
 
 /// <summary>
@@ -18,6 +20,18 @@ public static class HttpApplicationBuilderExtensions
     {
         ArgumentNullException.ThrowIfNull(app);
         return app.UseMiddleware<ArgumentExceptionHandlingMiddleware>();
+    }
+
+    /// <summary>
+    /// Adds <see cref="ConflictException" /> handling middleware.
+    /// </summary>
+    /// <param name="app">The <see cref="IApplicationBuilder" /> to add middleware to.</param>
+    /// <returns>A reference to <c><paramref name="app" /></c> that can be further used to add middleware.</returns>
+    /// <exception cref="ArgumentNullException"><c><paramref name="app" /></c> is <c>null</c>.</exception>
+    public static IApplicationBuilder UseConflictExceptionHandling(this IApplicationBuilder app)
+    {
+        ArgumentNullException.ThrowIfNull(app);
+        return app.UseMiddleware<ConflictExceptionHandlingMiddleware>();
     }
 
     /// <summary>

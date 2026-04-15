@@ -59,6 +59,53 @@ public sealed class HttpServiceCollectionExtensionsTest
         );
     }
 
+    [Fact]
+    public void TestAddConflictExceptionHandling_Invalid()
+    {
+        // Act
+        ArgumentException ex =
+            Assert.Throws<ArgumentNullException>(() =>
+                AspNetCore.Http.HttpServiceCollectionExtensions.AddConflictExceptionHandling(null!));
+
+        // Assert
+        Assert.Equal("services", ex.ParamName);
+    }
+
+    [InlineData(Int32.MinValue)]
+    [InlineData(-1)]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(Int32.MaxValue)]
+    [Theory]
+    public void TestAddConflictExceptionHandling_Valid(int statusCode)
+    {
+        // Arrange
+        ICollection<ServiceDescriptor> collection =
+            new List<ServiceDescriptor>();
+
+        MockServiceCollection services = new();
+        services._addAction = collection.Add;
+
+        // Act
+        IServiceCollection result =
+            AspNetCore.Http.HttpServiceCollectionExtensions.AddConflictExceptionHandling(
+                services,
+                statusCode
+            );
+
+        // Assert
+        Assert.Same(services, result);
+
+        IEnumerable<ServiceDescriptor> descriptors =
+            collection.Where(s =>
+                s.ServiceType.IsAssignableTo(typeof (IMiddleware)));
+
+        Assert.Contains(
+            descriptors,
+            d => d.Lifetime == ServiceLifetime.Singleton
+        );
+    }
+
 #region AddNcsaCommonLogging method
     [Fact]
     public void TestAddNcsaCommonLogging_Invalid_ServicesNull()

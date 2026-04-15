@@ -46,6 +46,40 @@ public sealed class HttpApplicationBuilderExtensionsTest
     }
 
     [Fact]
+    public void TestUseConflictExceptionHandling_Invalid()
+    {
+        // Act
+        ArgumentException ex =
+            Assert.Throws<ArgumentNullException>(() =>
+                HttpApplicationBuilderExtensions.UseConflictExceptionHandling(null!));
+
+        // Assert
+        Assert.Equal("app", ex.ParamName);
+    }
+
+    [Fact]
+    public void TestUseConflictExceptionHandling_Valid()
+    {
+        // Arrange
+        ICollection<Object> middleware = new List<Object>();
+        MockApplicationBuilder app = new();
+
+        app._useFunc = m =>
+        {
+            middleware.Add(m);
+            return app;
+        };
+
+        // Act
+        IApplicationBuilder result =
+            HttpApplicationBuilderExtensions.UseConflictExceptionHandling(app);
+
+        // Assert
+        Assert.Same(app, result);
+        Assert.NotEmpty(middleware);
+    }
+
+    [Fact]
     public void TestUseNcsaCommonLogging_Invalid()
     {
         // Act
